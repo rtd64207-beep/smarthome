@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Home</title>
+<link rel="icon" type="image/png" href="b92df264-e893-4905-861f-d5d14bdcc1c9.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cream: #ffffff;
+  --cream-dark: #ffffff;
+  --ink: #1a1a1a;
+  --brown: #2c2418;
+  --gold: #ffffff;
+  --gold-lt: #ffffff;
+  --warm-gray: #000000;
+  --border: #000000;
+  --white: #ffffff;
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+
+  /* Skeleton colors */
+  --skeleton-base: #e0e0e0;
+  --skeleton-shine: #f5f5f5;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+
+
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+}
+
+
+.skeleton-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+.skeleton-overlay.visible {
+  display: block;
+}
+
+
+.navbar-skeleton {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 74px;
+  z-index: 1001;
+  background: var(--ink);
+  border-bottom: 2px solid var(--gold);
+  padding: 0 48px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-skeleton.visible {
+  display: flex;
+}
+
+.navbar-skeleton-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.skeleton-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+}
+
+.skeleton-brand-text {
+  width: 120px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #3a3a3a 25%, #555 50%, #3a3a3a 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.navbar-skeleton-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.skeleton-nav-item {
+  width: 80px;
+  height: 34px;
+  border-radius: 40px;
+  background: linear-gradient(90deg, #3a3a3a 25%, #555 50%, #3a3a3a 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+
+.hero-skeleton {
+  width: 100%;
+  height: 460px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid var(--gold);
+  display: none;
+}
+
+.hero-skeleton.visible {
+  display: block;
+}
+
+.hero-skeleton-img {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #2a2a2a 25%, #3d3d3d 50%, #2a2a2a 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.hero-skeleton-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.skeleton-badge {
+  width: 200px;
+  height: 26px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #3a3a3a 25%, #555 50%, #3a3a3a 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-hero-title {
+  width: 360px;
+  height: 62px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #3a3a3a 25%, #555 50%, #3a3a3a 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-hero-sub {
+  width: 480px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #3a3a3a 25%, #555 50%, #3a3a3a 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* Skeleton for info cards */
+.info-grid-skeleton {
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 20px;
+}
+
+.info-grid-skeleton.visible {
+  display: grid;
+}
+
+.info-card-skeleton {
+  background: var(--white);
+  border-radius: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-card-title {
+  width: 60%;
+  height: 22px;
+  border-radius: 6px;
+}
+
+.skeleton-card-line {
+  width: 100%;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeleton-card-line.short {
+  width: 75%;
+}
+
+.skeleton-card-line.shorter {
+  width: 55%;
+}
+
+/* Skeleton for products grid */
+.products-grid-skeleton {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 16px;
+}
+
+.products-grid-skeleton.visible {
+  display: grid;
+}
+
+.product-card-skeleton {
+  background: var(--white);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.skeleton-product-img {
+  width: 100%;
+  height: 200px;
+  border-radius: 0;
+}
+
+.skeleton-product-body {
+  padding: 24px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.skeleton-product-title {
+  width: 70%;
+  height: 22px;
+  border-radius: 6px;
+}
+
+.skeleton-product-desc-1 {
+  width: 100%;
+  height: 13px;
+  border-radius: 4px;
+}
+
+.skeleton-product-desc-2 {
+  width: 85%;
+  height: 13px;
+  border-radius: 4px;
+}
+
+.skeleton-product-price {
+  width: 80px;
+  height: 34px;
+  border-radius: 40px;
+  margin-top: 6px;
+}
+
+.skeleton-product-install {
+  width: 120px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+/* Skeleton for contact page */
+.contact-layout-skeleton {
+  display: none;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.contact-layout-skeleton.visible {
+  display: grid;
+}
+
+.contact-form-skeleton {
+  background: var(--white);
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  padding: 36px 34px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeleton-label {
+  width: 40%;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.skeleton-input {
+  width: 100%;
+  height: 46px;
+  border-radius: 20px;
+}
+
+.skeleton-textarea {
+  width: 100%;
+  height: 110px;
+  border-radius: 20px;
+}
+
+.skeleton-btn {
+  width: 100%;
+  height: 46px;
+  border-radius: 40px;
+  margin-top: 12px;
+}
+
+.contact-info-skeleton {
+  background: var(--white);
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  padding: 36px 30px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeleton-info-title {
+  width: 60%;
+  height: 24px;
+  border-radius: 6px;
+}
+
+.skeleton-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.skeleton-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-info-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-info-line {
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeleton-section-title {
+  height: 36px;
+  width: 55%;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+
+.skeleton-section-subtitle {
+  height: 16px;
+  width: 40%;
+  border-radius: 4px;
+  margin: 12px auto 48px;
+}
+
+.skeleton-divider {
+  width: 240px;
+  height: 20px;
+  border-radius: 4px;
+  margin: 28px auto 40px;
+}
+
+/* Hero skeleton for products/contact (shorter) */
+.hero-skeleton.short {
+  height: 300px;
+}
+
+.hero-skeleton.shorter {
+  height: 260px;
+}
+
+/* ===================== END SKELETON STYLES ===================== */
+
+.navbar {
+  background: var(--ink);
+  border-bottom: 2px solid var(--gold);
+  padding: 0 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 74px;
+  backdrop-filter: blur(2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1.5px solid var(--gold);
+  transition: var(--transition);
+}
+
+.navbar-brand h1 {
+  color: #ffffff;  
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar-brand span {
+  color: #ffffff; 
+  font-weight: 700;
+}
+
+.navbar-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.navbar-nav a {
+  color: #cfd8dc;  
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 40px;
+  transition: var(--transition);
+  cursor: pointer;
+  background: transparent;
+}
+
+.navbar-nav a:hover,
+.navbar-nav a.active-link {
+  color: #ffffff;  
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(4px);
+}
+
+
+.page {
+  display: none;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.hero {
+  position: relative;
+  height: 460px;
+  overflow: hidden;
+  border-bottom: 2px solid var(--gold);
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.48) contrast(1.05);
+  transition: transform 0.6s ease;
+}
+
+.hero:hover .hero-img {
+  transform: scale(1.02);
+}
+
+.hero-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #000000 0%, #000000 100%);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.hero-badge {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #ff0000;  
+  font-size: 0.8rem;
+  margin-bottom: 18px;
+  background: rgba(0,0,0,0.4);
+  padding: 4px 14px;
+  border-radius: 30px;
+  backdrop-filter: blur(4px);
+}
+
+.hero-title {
+  font-size: 3.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  color: #ffffff;  
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  letter-spacing: -0.01em;
+}
+
+.hero-title span {
+  color: #ffffff;  
+}
+
+.hero-sub {
+  color: #ffffff;  
+  font-size: 1.1rem;
+  max-width: 580px;
+  font-weight: 400;
+}
+
+
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 28px auto 40px;
+  max-width: 240px;
+}
+
+.divider-ornament::before,
+.divider-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.divider-ornament i {
+  color: #ffffff;  
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+
+.section-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #000000;  
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+
+.section-title span {
+  color: #000000;  
+  position: relative;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #000000; 
+  font-size: 1rem;
+  margin-bottom: 48px;
+  font-weight: 400;
+  border-bottom: 1px dashed var(--border);
+  display: inline-block;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 12px;
+}
+
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 20px;
+}
+
+.info-card {
+  background: var(--white);
+  border-radius: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  padding: 28px 32px;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--gold);
+}
+
+.info-card h3 {
+  font-weight: 600;
+  font-size: 1.35rem;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #000000;  
+}
+
+.info-card h3 i {
+  color: #000000;  
+  font-size: 1.5rem;
+}
+
+.info-card p, .info-card li {
+  color: #000000;  
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.info-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.info-card li {
+  padding-left: 24px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.info-card li::before {
+  content: "▹";
+  position: absolute;
+  left: 0;
+  color: #000000;  
+  font-weight: 500;
+}
+
+
+.classic-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.classic-table thead tr {
+  background: var(--ink);
+  border-radius: 16px;
+}
+
+.classic-table th {
+  color: #ffffff;  
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.classic-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: #000000;  
+  font-size: 0.9rem;
+  background: transparent;
+}
+
+.classic-table tr:last-child td {
+  border-bottom: none;
+}
+
+.classic-table tr:hover td {
+  background: var(--cream-dark);
+}
+
+
+.faq-item {
+  border-left: 4px solid var(--gold);
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  background: var(--cream-dark);
+  border-radius: 0 16px 16px 0;
+  transition: var(--transition);
+}
+
+.faq-item:hover {
+  background: #ffffff;
+  transform: translateX(4px);
+}
+
+.faq-item p.q {
+  font-weight: 700;
+  color: #000000;  
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.faq-item p.q::before {
+  content: "❯";
+  color: #000000;  
+  font-weight: bold;
+}
+
+.faq-item p.a {
+  color: #000000;  
+  font-size: 0.9rem;
+  padding-left: 22px;
+}
+
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 16px;
+}
+
+.product-card {
+  background: var(--white);
+  border-radius: 28px;
+  overflow: hidden;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--gold);
+}
+
+.product-img-wrap {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.product-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-img-wrap img {
+  transform: scale(1.05);
+}
+
+.product-img-wrap .fa-fallback {
+  font-size: 60px;
+  color: #000000;  
+  opacity: 0.6;
+}
+
+.product-body {
+  padding: 24px 22px 28px;
+  text-align: center;
+}
+
+.product-body h3 {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #000000;  
+}
+
+.product-body p {
+  color: #000000;  
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.product-price {
+  display: inline-block;
+  background: var(--ink);
+  color: #ffffff;  
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 6px 20px;
+  border-radius: 40px;
+  letter-spacing: 0.02em;
+}
+
+.product-install {
+  display: block;
+  color: #000000; 
+  font-size: 0.7rem;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.contact-form-wrap {
+  background: var(--white);
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  padding: 36px 34px;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-form-wrap label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #000000;  
+  margin-bottom: 6px;
+  margin-top: 20px;
+}
+
+.contact-form-wrap label:first-of-type {
+  margin-top: 0;
+}
+
+.contact-form-wrap input,
+.contact-form-wrap textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  background: var(--cream);
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  outline: none;
+  color: #000000;  
+}
+
+.contact-form-wrap input:focus,
+.contact-form-wrap textarea:focus {
+  border-color: var(--gold);
+  background: rgb(255, 255, 255);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.btn-classic {
+  margin-top: 28px;
+  padding: 12px 28px;
+  background: var(--ink);
+  color: #ffffff;  
+  border: 1.5px solid var(--gold);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 40px;
+  transition: var(--transition);
+  width: 100%;
+}
+
+.btn-classic:hover {
+  background: var(--gold);
+  color: #000000;  
+  border-color: var(--ink);
+  transform: scale(0.98);
+}
+
+.contact-info-wrap {
+  background: var(--white);
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  padding: 36px 30px;
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-info-wrap h3 {
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 28px;
+  color: #000000;  
+  border-left: 4px solid var(--gold);
+  padding-left: 16px;
+}
+
+.contact-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  color: #000000;  
+}
+
+.contact-info-row i {
+  color: #000000;  
+  font-size: 1.25rem;
+  margin-top: 2px;
+  width: 28px;
+}
+
+.social-row {
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.social-row p {
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: #000000;  
+}
+
+.social-icons {
+  display: flex;
+  gap: 14px;
+}
+
+.social-icons a {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  color: #000000;  
+  font-size: 1.2rem;
+  border-radius: 60px;
+  text-decoration: none;
+  transition: var(--transition);
+  background: var(--cream);
+}
+
+.social-icons a:hover {
+  background: var(--ink);
+  color: #ffffff;  
+  border-color: var(--gold);
+  transform: translateY(-3px);
+}
+
+
+.footer {
+  background: var(--ink);
+  border-top: 2px solid var(--gold);
+  color: #ffffff;  
+  text-align: center;
+  padding: 28px 20px;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  margin-top: 60px;
+}
+
+.footer span {
+  color: #ffffff; 
+  font-weight: 500;
+}
+
+
+body.is-loading .navbar {
+  visibility: hidden;
+}
+
+body.is-loading .page.active .hero {
+  visibility: hidden;
+}
+
+body.is-loading .page.active .section-wrap > *:not(.skeleton-section-header) {
+  visibility: hidden;
+}
+
+.skeleton-section-header {
+  display: none;
+}
+
+body.is-loading .skeleton-section-header {
+  display: block;
+}
+
+@media (max-width: 860px) {
+  .navbar {
+    padding: 0 24px;
+  }
+  .hero-title {
+    font-size: 2.4rem;
+  }
+  .info-grid,
+  .products-grid,
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+  .section-wrap {
+    padding: 40px 20px;
+  }
+  .hero {
+    height: 380px;
+  }
+  .info-grid-skeleton,
+  .products-grid-skeleton {
+    grid-template-columns: 1fr;
+  }
+  .contact-layout-skeleton {
+    grid-template-columns: 1fr;
+  }
+  .hero-skeleton {
+    height: 380px;
+  }
+  .navbar-skeleton {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 580px) {
+  .navbar-nav a {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  .info-card {
+    padding: 20px;
+  }
+  .skeleton-nav-item {
+    width: 56px;
+    height: 28px;
+  }
+}
+</style>
+</head>
+<body class="is-loading">
+
+
+<div class="navbar-skeleton visible" id="skeletonNavbar">
+  <div class="navbar-skeleton-brand">
+    <div class="skeleton skeleton-logo"></div>
+    <div class="skeleton-brand-text"></div>
+  </div>
+  <div class="navbar-skeleton-nav">
+    <div class="skeleton skeleton-nav-item"></div>
+    <div class="skeleton skeleton-nav-item"></div>
+    <div class="skeleton skeleton-nav-item"></div>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <img src="b92df264-e893-4905-861f-d5d14bdcc1c9.png" alt="Smart Home Logo" class="navbar-logo"
+         onerror="this.style.display='none'">
+    <h1>Smart <span>Home</span></h1>
+  </div>
+  <div class="navbar-nav">
+    <a onclick="showPage('home')" id="nav-home" class="active-link">Inici</a>
+    <a onclick="showPage('products')" id="nav-products">Productes</a>
+    <a onclick="showPage('contact')" id="nav-contact">Contacte</a>
+  </div>
+</nav>
+
+
+<div id="home" class="page active">
+
+  
+  <div class="hero-skeleton visible" id="skeletonHeroHome">
+    <div class="hero-skeleton-img"></div>
+    <div class="hero-skeleton-overlay">
+      <div class="skeleton skeleton-badge"></div>
+      <div class="skeleton skeleton-hero-title"></div>
+      <div class="skeleton skeleton-hero-sub"></div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <img src="hero-home.jpg" alt="Casa intel·ligent amb automatització" class="hero-img"
+         onerror="this.style.display='none'">
+    <div class="hero-fallback"></div>
+    <div class="hero-overlay">
+      <p class="hero-badge">Benvinguts al futur de la llar</p>
+      <h1 class="hero-title">Smart <span>Home</span></h1>
+      <p class="hero-sub">Solucions d'automatització per a la llar moderna. +200 instal·lacions i 5 anys d'experiència.</p>
+    </div>
+  </div>
+
+  <div class="section-wrap">
+    
+    <div id="skeletonHomeContent" class="skeleton-section-header">
+      <div class="skeleton skeleton-divider" style="margin-bottom:40px"></div>
+      <div class="info-grid-skeleton visible">
+     
+        <div class="info-card-skeleton">
+          <div class="skeleton skeleton-card-title"></div>
+          <div class="skeleton skeleton-card-line"></div>
+          <div class="skeleton skeleton-card-line short"></div>
+          <div class="skeleton skeleton-card-line"></div>
+          <div class="skeleton skeleton-card-line shorter"></div>
+        </div>
+       
+        <div class="info-card-skeleton">
+          <div class="skeleton skeleton-card-title"></div>
+          <div class="skeleton skeleton-card-line short"></div>
+          <div class="skeleton skeleton-card-line shorter"></div>
+          <div class="skeleton skeleton-card-line short"></div>
+          <div class="skeleton skeleton-card-line shorter"></div>
+        </div>
+        
+        <div class="info-card-skeleton">
+          <div class="skeleton skeleton-card-title"></div>
+          <div class="skeleton skeleton-card-line"></div>
+          <div class="skeleton skeleton-card-line short"></div>
+          <div class="skeleton skeleton-card-line shorter"></div>
+          <div class="skeleton skeleton-card-line"></div>
+        </div>
+        
+        <div class="info-card-skeleton">
+          <div class="skeleton skeleton-card-title"></div>
+          <div class="skeleton skeleton-card-line short"></div>
+          <div class="skeleton skeleton-card-line"></div>
+          <div class="skeleton skeleton-card-line shorter"></div>
+          <div class="skeleton skeleton-card-line short"></div>
+          <div class="skeleton skeleton-card-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider-ornament">
+      <i class="fa-solid fa-house-chimney"></i>
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3><i class="fa-solid fa-building"></i> Sobre nosaltres</h3>
+        <p>Smart Home és una empresa referent en solucions per a la llar intel·ligent. Oferim productes d'alta qualitat, instal·lació professional i suport tècnic personalitzat. Més de 200 instal·lacions reeixides avalen la nostra trajectòria.</p>
+      </div>
+      <div class="info-card">
+        <h3><i class="fa-solid fa-trophy"></i> Assoliments</h3>
+        <ul>
+          <li>Més de 200 instal·lacions reeixides</li>
+          <li>5 anys d'experiència al sector</li>
+          <li>Confiança de centenars de famílies</li>
+          <li>Suport tècnic especialitzat 24/7</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3><i class="fa-solid fa-users"></i> Equip expert</h3>
+        <table class="classic-table">
+          <thead>
+            <tr><th>Nom</th><th>Càrrec</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Aitor</td><td>Administrador</td></tr>
+            <tr><td>Mohamed</td><td>Programador</td></tr>
+            <tr><td>Nicolas</td><td>Suport i postvenda</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="info-card">
+        <h3><i class="fa-solid fa-circle-question"></i> Preguntes freqüents</h3>
+        <div class="faq-item">
+          <p class="q">És molt car automatitzar casa meva?</p>
+          <p class="a">No, oferim paquets assequibles per a tots els pressupostos, des de solucions bàsiques fins a sistemes complets.</p>
+        </div>
+        <div class="faq-item">
+          <p class="q">Cal connexió a internet?</p>
+          <p class="a">Sí, per al control remot i notificacions és necessària una connexió estable de banda ampla.</p>
+        </div>
+        <div class="faq-item">
+          <p class="q">Quant triga la instal·lació?</p>
+          <p class="a">La majoria d'instal·lacions es realitzen en un sol dia laboral.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="products" class="page">
+
+  
+  <div class="hero-skeleton short" id="skeletonHeroProducts">
+    <div class="hero-skeleton-img"></div>
+    <div class="hero-skeleton-overlay">
+      <div class="skeleton skeleton-badge"></div>
+      <div class="skeleton skeleton-hero-title" style="width:300px;height:48px"></div>
+    </div>
+  </div>
+
+  <div class="hero" style="height:300px">
+    <img src="hero-products.jpg" alt="Productes Smart Home" class="hero-img"
+         onerror="this.style.display='none'">
+    <div class="hero-fallback"></div>
+    <div class="hero-overlay">
+      <p class="hero-badge">Catàleg Premium</p>
+      <h1 class="hero-title" style="font-size:2.6rem">Els nostres <span>Productes</span></h1>
+    </div>
+  </div>
+
+  <div class="section-wrap">
+    
+
+
+
+
+
+
+
+    <div id="skeletonProductsContent" class="skeleton-section-header">
+      <div class="skeleton skeleton-section-title"></div>
+      <div class="skeleton skeleton-section-subtitle"></div>
+      <div class="products-grid-skeleton visible">
+        
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+        <div class="product-card-skeleton">
+          <div class="skeleton skeleton-product-img"></div>
+          <div class="skeleton-product-body">
+            <div class="skeleton skeleton-product-title"></div>
+            <div class="skeleton skeleton-product-desc-1"></div>
+            <div class="skeleton skeleton-product-desc-2"></div>
+            <div class="skeleton skeleton-product-price"></div>
+            <div class="skeleton skeleton-product-install"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <h2 class="section-title">Solucions per a la <span>llar connectada</span></h2>
+    <p class="section-subtitle">Tecnologia intuïtiva per fer la vostra vida més còmoda, eficient i segura</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="media.webp" alt="Il·luminació intel·ligent"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-lightbulb fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Il·luminació Intel·ligent</h3>
+          <p>Controla els llums amb veu o mòbil, crea escenes personalitzades i estalvia energia.</p>
+          <span class="product-price">54€</span>
+          <span class="product-install">Instal·lació: 20 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="camara-de-seguridad-wifi-smart-home.jpg" alt="Càmeres de seguretat"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-video fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Càmeres de Seguretat</h3>
+          <p>Visió nocturna, detecció de moviment i accés remot 24/7 per protegir la llar.</p>
+          <span class="product-price">280 €</span>
+          <span class="product-install">Instal·lació: 30 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="618y+jzmgaL.jpg" alt="Sensors de moviment"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-person-walking-arrow-right fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Sensors de Moviment</h3>
+          <p>Alertes instantànies i integració amb el sistema d'il·luminació i alarma.</p>
+          <span class="product-price">80 €</span>
+          <span class="product-install">Instal·lació: 15 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="Panys de portes intel·ligents.jpg" alt="Càmeres de seguretat"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-video fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Panys de portes intel·ligents</h3>
+          <p>Controla l'accés a la teva llar amb clau o codi, i rep alertes en temps real.</p>
+          <span class="product-price">149.99 €</span>
+          <span class="product-install">Instal·lació: 30 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="Interruptors elèctrics intel·ligents.jpg" alt="Càmeres de seguretat"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-video fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Interruptors elèctrics intel·ligents</h3>
+          <p>Controla els interruptors des de l'aplicació, crea escenes personalitzades i estalvia energia.</p>
+          <span class="product-price">99 €</span>
+          <span class="product-install">Instal·lació: 20 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="Aires condicionats intel·ligents.jpg" alt="Càmeres de seguretat"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-video fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Aires condicionats intel·ligents</h3>
+          <p>Controla l' temperatura i la qualitat de l'aire de la teva llar des de l'aplicació.</p>
+          <span class="product-price">199 €</span>
+          <span class="product-install">Instal·lació: 40 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="Termòstats intel·ligents.jpg" alt="Càmeres de seguretat"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-video fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Termòstats intel·ligents</h3>
+          <p>Controla la temperatura i la qualitat de l'aire de la teva llar des de l'aplicació.</p>
+          <span class="product-price">129 €</span>
+          <span class="product-install">Instal·lació: 25 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="Televisor intel·ligent.jpg" alt="Càmeres de seguretat"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-video fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Televisor intel·ligent</h3>
+          <p>Disfruta de la teva televisió amb funcions intel·ligents i control remot.</p>
+          <span class="product-price">289 €</span>
+          <span class="product-install">Instal·lació: 30 €</span>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="ZjQzNDc3MTct._CB778475880_.jpg" alt="Càmeres de seguretat"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <i class="fa-solid fa-video fa-fallback" style="display:none"></i>
+        </div>
+        <div class="product-body">
+          <h3>Alixa Amazon</h3>
+          <p>Assistent de veu intel·ligent amb funcions de control domèstic i accés a serveis de tercers.</p>
+          <span class="product-price">299 €</span>
+          <span class="product-install">Instal·lació: 30 €</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="contact" class="page">
+
+  
+  <div class="hero-skeleton shorter" id="skeletonHeroContact">
+    <div class="hero-skeleton-img"></div>
+    <div class="hero-skeleton-overlay">
+      <div class="skeleton skeleton-badge"></div>
+      <div class="skeleton skeleton-hero-title" style="width:260px;height:48px"></div>
+    </div>
+  </div>
+
+  <div class="hero" style="height:260px">
+    <img src="hero-contact.jpg" alt="Contacta amb Smart Home" class="hero-img"
+         onerror="this.style.display='none'">
+    <div class="hero-fallback"></div>
+    <div class="hero-overlay">
+      <p class="hero-badge">Assessorament sense compromís</p>
+      <h1 class="hero-title" style="font-size:2.6rem"><span>Contacteu</span>-nos</h1>
+    </div>
+  </div>
+
+  <div class="section-wrap">
+   
+    <div id="skeletonContactContent" class="skeleton-section-header">
+      <div class="skeleton skeleton-section-title"></div>
+      <div class="skeleton skeleton-section-subtitle"></div>
+      <div class="contact-layout-skeleton visible">
+        <div class="contact-form-skeleton">
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-input"></div>
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-input"></div>
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-textarea"></div>
+          <div class="skeleton skeleton-btn"></div>
+        </div>
+        <div class="contact-info-skeleton">
+          <div class="skeleton skeleton-info-title"></div>
+          <div class="skeleton-info-row">
+            <div class="skeleton skeleton-icon"></div>
+            <div class="skeleton-info-text">
+              <div class="skeleton skeleton-info-line" style="width:80%"></div>
+              <div class="skeleton skeleton-info-line" style="width:60%"></div>
+            </div>
+          </div>
+          <div class="skeleton-info-row">
+            <div class="skeleton skeleton-icon"></div>
+            <div class="skeleton-info-text">
+              <div class="skeleton skeleton-info-line" style="width:65%"></div>
+            </div>
+          </div>
+          <div class="skeleton-info-row">
+            <div class="skeleton skeleton-icon"></div>
+            <div class="skeleton-info-text">
+              <div class="skeleton skeleton-info-line" style="width:70%"></div>
+            </div>
+          </div>
+          <div style="margin-top:auto;padding-top:20px;border-top:1px solid #e0e0e0">
+            <div class="skeleton skeleton-label" style="width:50%;margin-bottom:16px"></div>
+            <div style="display:flex;gap:14px">
+              <div class="skeleton skeleton-icon" style="width:44px;height:44px;border-radius:50%"></div>
+              <div class="skeleton skeleton-icon" style="width:44px;height:44px;border-radius:50%"></div>
+              <div class="skeleton skeleton-icon" style="width:44px;height:44px;border-radius:50%"></div>
+              <div class="skeleton skeleton-icon" style="width:44px;height:44px;border-radius:50%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Poseu-vos en <span>contacte</span></h2>
+    <p class="section-subtitle">Respondrem en menys de 24 hores</p>
+    <div class="contact-layout">
+      <div class="contact-form-wrap">
+        <label><i class="fa-regular fa-user"></i> Nom complet</label>
+        <input type="text" placeholder="Ex: Laura García" id="contactName">
+        <label><i class="fa-regular fa-envelope"></i> Correu electrònic</label>
+        <input type="email" placeholder="correu@exemple.cat" id="contactEmail">
+        <label><i class="fa-regular fa-message"></i> Missatge</label>
+        <textarea placeholder="Expliqueu'ns quina solució us interessa..." id="contactMsg"></textarea>
+        <button class="btn-classic" onclick="sendContact()">
+          Enviar missatge <i class="fa-regular fa-paper-plane"></i>
+        </button>
+      </div>
+      <div class="contact-info-wrap">
+        <h3>Informació de contacte</h3>
+        <div class="contact-info-row">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>Carrer de la Llar, 42<br>08720 Barcelona, Catalunya</span>
+        </div>
+        <div class="contact-info-row">
+          <i class="fa-solid fa-phone"></i>
+          <span>+34 678 652 318</span>
+        </div>
+        <div class="contact-info-row">
+          <i class="fa-solid fa-envelope"></i>
+          <span>info@smarthome.cat</span>
+        </div>
+        <div class="social-row">
+          <p>Segueix-nos a xarxes</p>
+          <div class="social-icons">
+            <a href="https://www.facebook.com/smarthome" target="_blank" rel="noopener" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/smarthome" target="_blank" rel="noopener" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://twitter.com/smarthome" target="_blank" rel="noopener" title="Twitter X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.linkedin.com/company/smarthome" target="_blank" rel="noopener" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>&copy; 2026 <span>Smart Home Company</span> - Tots els drets reservats.</p>
+</footer>
+
+<script>
+  
+
+  function hideSkeleton() {
+    document.body.classList.remove('is-loading');
+   
+    document.getElementById('skeletonNavbar').classList.remove('visible');
+    document.querySelectorAll('.hero-skeleton').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.skeleton-section-header').forEach(el => el.style.display = 'none');
+    
+    document.querySelector('.navbar').style.visibility = '';
+  }
+
+  function showSkeletonForPage(pageId) {
+   
+    const heroSkeletonMap = {
+      'home': 'skeletonHeroHome',
+      'products': 'skeletonHeroProducts',
+      'contact': 'skeletonHeroContact'
+    };
+    
+    document.querySelectorAll('.hero-skeleton').forEach(el => el.classList.remove('visible'));
+   
+    const skId = heroSkeletonMap[pageId];
+    if (skId) document.getElementById(skId).classList.add('visible');
+  }
+
+ 
+  window.addEventListener('DOMContentLoaded', function () {
+    
+    setTimeout(hideSkeleton, 900);
+  });
+
+
+
+  function showPage(pageId) {
+   
+    document.body.classList.add('is-loading');
+    showSkeletonForPage(pageId);
+    document.getElementById('skeletonNavbar').classList.remove('visible');
+
+    setTimeout(function () {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      document.querySelectorAll('.navbar-nav a').forEach(a => a.classList.remove('active-link'));
+      const activeLink = document.getElementById('nav-' + pageId);
+      if (activeLink) activeLink.classList.add('active-link');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    
+
+
+
+
+
+      setTimeout(hideSkeleton, 700);
+    }, 80);
+  }
+
+
+
+
+
+
+
+
+
+
+  function sendContact() {
+    const name = document.getElementById('contactName')?.value.trim();
+    const email = document.getElementById('contactEmail')?.value.trim();
+    const msg = document.getElementById('contactMsg')?.value.trim();
+    if (!name || !email || !msg) {
+      alert(' Si us plau, ompliu tots els camps abans d\'enviar.');
+      return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      alert(' Introdueix un correu electrònic vàlid.');
+      return;
+    }
+    alert(` Gràcies ${name}, el vostre missatge s'ha enviat correctament. Ens posarem en contacte aviat.`);
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactEmail').value = '';
+    document.getElementById('contactMsg').value = '';
+  }
+
+ 
+
+
+
+
+
+
+  document.querySelectorAll('.product-img-wrap img').forEach(img => {
+    img.addEventListener('error', function() {
+      this.style.display = 'none';
+      const fallbackIcon = this.nextElementSibling;
+      if (fallbackIcon && fallbackIcon.classList.contains('fa-fallback')) {
+        fallbackIcon.style.display = 'block';
+      }
+    });
+  });
+</script>
+</body>
+</html>
+
+<!--mohamed el kourachi-->
+<!--Aitor Rodríguez Chávez-->
+<!--Jeremy Nicolas Sevillano Garcia-->
